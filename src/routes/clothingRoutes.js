@@ -54,21 +54,21 @@ router.get("/:id", async (req, res) => {
     if (clothing) {
       res.status(200).json(clothing);
     } else {
-      res.status(404).json({ message: "Van not found" });
+      res.status(404).json({ message: "Clothng not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error fetching van", error });
+    res.status(500).json({ message: "Error fetching clothing", error });
   }
 });
 
 // POST create a new van
-router.post("/", async (req, res) => {
+router.post("/clothing", async (req, res) => {
   try {
     const clothingData = req.body;
     const newClothing = await clothingService.createClothing(clothingData);
     res.status(201).json(newClothing);
   } catch (error) {
-    res.status(500).json({ message: "Error creating van", error });
+    res.status(500).json({ message: "Error creating clothingCard", error });
   }
 });
 
@@ -84,11 +84,11 @@ router.put("/:id/availability", async (req, res) => {
     if (updatedClothing) {
       res.status(200).json(updatedClothing);
     } else {
-      res.status(404).json({ message: "Van not found" });
+      res.status(404).json({ message: "clothing not found" });
     }
   } catch (error) {
     JavaScript;
-    res.status(500).json({ message: "Error updating van availability", error });
+    res.status(500).json({ message: "Error updating clothing availability", error });
   }
 });
 
@@ -98,12 +98,12 @@ router.delete("/:id", async (req, res) => {
     const clothing_id = req.params.id;
     const deletedClothing = await clothingService.deleteClothing(clothing_id);
     if (deletedClothing) {
-      res.status(200).json({ message: "Van deleted successfully" });
+      res.status(200).json({ message: " Clothing deleted successfully" });
     } else {
-      res.status(404).json({ message: "Van not found" });
+      res.status(404).json({ message: " not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error deleting van", error });
+    res.status(500).json({ message: "Error deleting clothing", error });
   }
 });
 
