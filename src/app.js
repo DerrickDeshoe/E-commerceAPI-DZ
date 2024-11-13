@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 // const userRoutes = require('./routes/userRoutes');
-// const clothingRoutes = require('./routes/clothingRoutes');
+const clothingRoutes = require('./routes/clothingRoutes');
 // const bookingRoutes = require('./routes/bookingRoutes');
 // const paymentRoutes = require('./routes/paymentRoutes');
 // const reviewRoutes = require('./routes/reviewRoutes');
@@ -17,7 +17,7 @@ useUnifiedTopology: true })
 app.use(express.json());
 // Define routes
 // app.use('/users', userRoutes);
-// app.use('/clothing', clothingRoutes);
+app.use('/clothing', clothingRoutes);
 // app.use('/bookings', bookingRoutes);
 // app.use('/payments', paymentRoutes);
 // app.use('/reviews', reviewRoutes);
