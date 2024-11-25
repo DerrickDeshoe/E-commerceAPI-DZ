@@ -10,7 +10,7 @@ const clothingRoutes = require('./routes/clothingRoutes');
 dotenv.config();
 const app = express();
 // Database connection
-mongoose.connect('mongodb+srv://commerce:commerce@cluster0.vsyro.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',{ useNewUrlParser: true,
+mongoose.connect('mongodb+srv://onlinecommerce:onlinecommerce@commerce.rmewx.mongodb.net/?retryWrites=true&w=majority&appName=Commerce',{ useNewUrlParser: true,
 useUnifiedTopology: true })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));

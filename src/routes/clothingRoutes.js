@@ -62,7 +62,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST create a new van
-router.post("/clothing", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const clothingData = req.body;
     const newClothing = await clothingService.createClothing(clothingData);
