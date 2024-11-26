@@ -1,52 +1,20 @@
-// const express = require('express');
-// const router = express.Router();
-
-// // Import the controller functions
-// const {
-//   createClothing,
-//   getAllClothing,
-//   getClothingById,
-//   updateClothingById,
-//   deleteClothingById,
-// } = require('../controllers/clothingController');
-
-// // Route for creating a clothing item
-// router.post('/', createClothing);
-
-// // Route for getting all clothing items
-// router.get('/', getAllClothing);
-
-// // Route for getting a specific clothing item by ID
-// router.get('/:id', getClothingById);
-
-// // Route for updating a clothing item by ID
-// router.put('/:id', updateClothingById);
-
-// // Route for deleting a clothing item by ID
-// router.delete('/:id', deleteClothingById);
-
-// module.exports = router;
-
 const express = require("express");
 const router = express.Router();
 const clothingService = require("../services/clothingService");
 
-
-
-// GET all available vans
+// GET all available clothing
 router.get("/available", async (req, res) => {
   try {
-    const clothing = await clothingService.getAvailableClothes();
-    res.status(200).json(clothing);
+    const availableClothes = await clothingService.getAvailableClothes();
+    res.status(200).json(availableClothes);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching available clothes", error });
+    console.error("Error fetching available clothes:", error);
+    res.status(500).json({ message: "Error fetching available clothes", error: error.message });
   }
-  JavaScript;
 });
 
-// GET van by ID
+
+// GET clothing by ID
 router.get("/:id", async (req, res) => {
   try {
     const clothing_id = req.params.id;
@@ -54,29 +22,45 @@ router.get("/:id", async (req, res) => {
     if (clothing) {
       res.status(200).json(clothing);
     } else {
-      res.status(404).json({ message: "Clothng not found" });
+      res.status(404).json({ message: "Clothing not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error fetching clothing", error });
+    console.error("Error fetching clothing by ID:", error);
+    res.status(500).json({ message: "Error fetching clothing", error: error.message });
   }
 });
 
-// POST create a new van
+// POST create a new clothing item
 router.post("/", async (req, res) => {
   try {
     const clothingData = req.body;
+
+    // Validate required fields
+    if (!clothingData.name || !clothingData.price || !clothingData.clothing_size) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    console.log("Request body:", clothingData); // Debugging: Log the request body
+
     const newClothing = await clothingService.createClothing(clothingData);
     res.status(201).json(newClothing);
   } catch (error) {
-    res.status(500).json({ message: "Error creating clothingCard", error });
+    console.error("Error creating clothing:", error); // Debugging: Log the error
+    res.status(500).json({ message: "Error creating clothing", error: error.message });
   }
 });
 
-// PUT update van availability
+
+// PUT update clothing availability
 router.put("/:id/availability", async (req, res) => {
   try {
     const clothing_id = req.params.id;
-    const availability = req.body.availability;
+    const { availability } = req.body;
+
+    if (availability === undefined) {
+      return res.status(400).json({ message: "Missing availability field" });
+    }
+
     const updatedClothing = await clothingService.updateClothingAvailability(
       clothing_id,
       availability
@@ -84,26 +68,27 @@ router.put("/:id/availability", async (req, res) => {
     if (updatedClothing) {
       res.status(200).json(updatedClothing);
     } else {
-      res.status(404).json({ message: "clothing not found" });
+      res.status(404).json({ message: "Clothing not found" });
     }
   } catch (error) {
-    JavaScript;
-    res.status(500).json({ message: "Error updating clothing availability", error });
+    console.error("Error updating clothing availability:", error);
+    res.status(500).json({ message: "Error updating clothing availability", error: error.message });
   }
 });
 
-// DELETE van by ID
+// DELETE clothing by ID
 router.delete("/:id", async (req, res) => {
   try {
     const clothing_id = req.params.id;
     const deletedClothing = await clothingService.deleteClothing(clothing_id);
     if (deletedClothing) {
-      res.status(200).json({ message: " Clothing deleted successfully" });
+      res.status(200).json({ message: "Clothing deleted successfully" });
     } else {
-      res.status(404).json({ message: " not found" });
+      res.status(404).json({ message: "Clothing not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error deleting clothing", error });
+    console.error("Error deleting clothing:", error);
+    res.status(500).json({ message: "Error deleting clothing", error: error.message });
   }
 });
 

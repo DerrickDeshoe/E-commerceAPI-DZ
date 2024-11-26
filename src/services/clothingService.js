@@ -1,137 +1,85 @@
-// const express = require('express');
-// const router = express.Router();
-// const Clothing = require("../models/clothing"); // import the clothing model
-
-// // CREATE - Add a new clothing item
-// router.post("/", async (req, res) => {
-//   try {
-//     const clothing = new Clothing(req.body);
-//     const savedClothing = await clothing.save();
-//     res.status(201).json(savedClothing);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
-
-// // READ - Get all clothing items
-// router.get("/", async (req, res) => {
-//   try {
-//     const clothes = await Clothing.find();
-//     res.json(clothes);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-// // READ - Get a clothing item by ID
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const clothing = await Clothing.findById(req.params.id);
-//     if (!clothing)
-//       return res.status(404).json({ message: "Clothing item not found" });
-//     res.json(clothing);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-// // UPDATE - Update a clothing item by ID
-// router.put("/:id", async (req, res) => {
-//   try {
-//     const updatedClothing = await Clothing.findByIdAndUpdate(
-//       req.params.id,
-//       req.body,
-//       {
-//         new: true,
-//         runValidators: true,
-//       }
-//     );
-//     if (!updatedClothing)
-//       return res.status(404).json({ message: "Clothing item not found" });
-//     res.json(updatedClothing);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
-
-// // DELETE - Delete a clothing item by ID
-// router.delete("/:id", async (req, res) => {
-//   try {
-//     const deletedClothing = await Clothing.findByIdAndDelete(req.params.id);
-//     if (!deletedClothing)
-//       return res.status(404).json({ message: "Clothing item not found" });
-//     res.json({ message: "Clothing item deleted successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-// module.exports = router;
-
-
-const Clothing = require('../models/clothingModel'); 
+const Clothing = require('../models/clothingModel');
 
 // CREATE - Add a new clothing item
-const createClothing = async (req, res) => {
+const createClothing = async (clothingData) => {
   try {
-    const clothing = new Clothing(req.body);
+    console.log("Creating clothing with data:", clothingData); // Debugging: Log input data
+
+    const clothing = new Clothing(clothingData);
     const savedClothing = await clothing.save();
-    res.status(201).json(savedClothing);
+
+    console.log("Saved clothing item:", savedClothing); // Debugging: Log saved item
+    return savedClothing;
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error in createClothing service:", error.message); // Debugging: Log the error
+    throw new Error("Error creating clothing");
   }
 };
+
 
 // READ - Get all clothing items
-const getAllClothing = async (req, res) => {
+const getAvailableClothes = async (filters) => {
   try {
-    const clothes = await Clothing.find();
-    res.json(clothes);
+    const availableClothes = await Clothing.find(filters);
+    return availableClothes;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching available clothes:", error);
+    throw new Error("Error fetching available clothes");
   }
 };
 
+
+
+
 // READ - Get a clothing item by ID
-const getClothingById = async (req, res) => {
+const getClothingById = async (id) => {
   try {
-    const clothing = await Clothing.findById(req.params.id);
-    if (!clothing) return res.status(404).json({ message: "Clothing item not found" });
-    res.json(clothing);
+    const clothing = await Clothing.findById(id); // Find clothing by ID
+    if (!clothing) {
+      throw new Error("Clothing item not found");
+    }
+    return clothing;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching clothing by ID:", error.message);
+    throw new Error("Error fetching clothing item by ID");
   }
 };
 
 // UPDATE - Update a clothing item by ID
-const updateClothingById = async (req, res) => {
+const updateClothingById = async (id, updateData) => {
   try {
-    const updatedClothing = await Clothing.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
+    const updatedClothing = await Clothing.findByIdAndUpdate(id, updateData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure schema validation is applied
     });
-    if (!updatedClothing) return res.status(404).json({ message: "Clothing item not found" });
-    res.json(updatedClothing);
+    if (!updatedClothing) {
+      throw new Error("Clothing item not found");
+    }
+    return updatedClothing;
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error updating clothing:", error.message);
+    throw new Error("Error updating clothing item");
   }
 };
 
 // DELETE - Delete a clothing item by ID
-const deleteClothingById = async (req, res) => {
+const deleteClothingById = async (id) => {
   try {
-    const deletedClothing = await Clothing.findByIdAndDelete(req.params.id);
-    if (!deletedClothing) return res.status(404).json({ message: "Clothing item not found" });
-    res.json({ message: "Clothing item deleted successfully" });
+    const deletedClothing = await Clothing.findByIdAndDelete(id); // Delete by ID
+    if (!deletedClothing) {
+      throw new Error("Clothing item not found");
+    }
+    return { message: "Clothing item deleted successfully" };
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error deleting clothing:", error.message);
+    throw new Error("Error deleting clothing item");
   }
 };
 
 module.exports = {
   createClothing,
-  getAllClothing,
   getClothingById,
   updateClothingById,
   deleteClothingById,
+  getAvailableClothes,
 };
